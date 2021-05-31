@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CRC
@@ -44,6 +37,7 @@ namespace CRC
             try
             {
                 inputCode = Convert.ToInt64(textBox2.Text, 16);
+                textBox7.Text = Convert.ToString(inputCode, 2);
             }
             catch
             {
@@ -52,7 +46,7 @@ namespace CRC
             }
             crc = CRC.CalculateCRC(inputCode);
             textBox3.Text = Convert.ToString(crc, 2);
-            //textBox5.Text = Convert.ToString(CRC.GetMessagePlusCRC(inputCode, crc), 2);
+            textBox5.Text = Convert.ToString(CRC.GetMessagePlusCRC(inputCode, crc), 2);
 
         }
 
@@ -67,7 +61,7 @@ namespace CRC
             long inputMessage;
             try
             {
-                inputMessage = Convert.ToInt64(textBox2.Text, 16);
+                inputMessage = Convert.ToInt64(textBox4.Text, 16);
             }
             catch
             {
@@ -75,7 +69,7 @@ namespace CRC
                 return;
             }
 
-            if (CRC.CheckMessage(inputMessage, crc))
+            if (CRC.CheckMessage(inputMessage, crc, out long remainder))
             {
                 label5.Text = "Результат: Данные приняты верно!";
             }
@@ -83,6 +77,8 @@ namespace CRC
             {
                 label5.Text = "Результат: Данные приняты с ошибкой!";
             }
+
+            textBox6.Text = Convert.ToString(remainder, 2);
         }
     }
 }

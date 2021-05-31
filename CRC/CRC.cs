@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CRC
 {
     static class CRC
     {
         private static long _poly; // Генераторный полином
-        private static readonly int _polyLength = (int)Math.Log(_poly, 2) + 1;
+        private static int _polyLength = (int)Math.Log(_poly, 2) + 1;
 
         private static int _inputCodeLength;
 
@@ -18,6 +14,7 @@ namespace CRC
             set
             {
                 _poly = value;
+                _polyLength = (int)Math.Log(_poly, 2) + 1;
             }
         }
 
@@ -28,7 +25,6 @@ namespace CRC
                 inputCode <<= _polyLength - 1;
 
             _inputCodeLength = (int)Math.Log(inputCode, 2) + 1;
-            //_poly <<= (_inputCodeLength - _polyLength); // Сдвиг полинома до старшего бита принятого сообщения
 
             while ((int)Math.Log(inputCode, 2) + 1 >= _polyLength)
             {
@@ -36,30 +32,24 @@ namespace CRC
                 subCode ^= _poly;
                 inputCode = Convert.ToInt64(Convert.ToString(subCode, 2) + Convert.ToString(inputCode, 2).Substring((int)Math.Log(_poly, 2) + 1), 2);
             }
-            // Если размер текущего остатка равен размеру полинома, то выполнить XOR еще один раз
-            if ((int)Math.Log(inputCode, 2) + 1 == (int)Math.Log(_poly, 2) + 1)
-            {
-                inputCode ^= _poly;
-            }
 
             return inputCode;
         }
 
-        public static bool CheckMessage(long message, long crc)
+        public static bool CheckMessage(long message, long crc, out long remainder)
         {
-            message <<= _polyLength - 1; // Добавление в конец сообщения нулей
-            long messagePlusCrcInt = message + crc; // Прибавление к сообщению CRC кода
-
-            return CalculateCRC(messagePlusCrcInt, true) == 0; // Равен ли CRC код нулю
+            remainder = CalculateCRC(GetMessagePlusCRC(message, crc), true);
+            return remainder == 0; // Равен ли CRC код нулю
         }
 
-        //public static long GetMessagePlusCRC(long message, long crc)
-        //{
-        //    message <<= _polyLength - 1; // Добавление в конец сообщения нулей
-        //    long messagePlusCrc = message + crc; // Прибавление к сообщению CRC кода
+        public static long GetMessagePlusCRC(long message, long crc)
+        {
+            message <<= _polyLength - 1; // Добавление в конец сообщения нулей
+            long messagePlusCrc = message + crc; // Прибавление к сообщению CRC кода
 
-        //    return messagePlusCrc;
-        //}
+            return messagePlusCrc;
+        }
+
     }
 
 }

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiK KR Drozdov", "TiK KR Drozdov\TiK KR Drozdov.csproj", "{273E9814-494A-4F67-BCBE-5827ADEA077B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Huffman", "TiK KR Drozdov\Huffman.csproj", "{273E9814-494A-4F67-BCBE-5827ADEA077B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRC", "CRC\CRC.csproj", "{C54D2D5D-D74F-4226-A28C-EC11CC2C8337}"
 EndProject

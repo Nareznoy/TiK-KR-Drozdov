@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TiK_KR_Drozdov
 {
@@ -10,6 +8,25 @@ namespace TiK_KR_Drozdov
     {
         private Node _head;
         public Dictionary<string, string> CodesDictionary;
+        
+        private double _entropy;
+        private double _averageLength;
+
+        public double GetEntropy
+        {
+            get
+            {
+                return _entropy;
+            }
+        }
+
+        public double GetAverageLength
+        {
+            get
+            {
+                return _averageLength;
+            }
+        }
 
         /// <summary>
         ///     Конструктор построения дерева
@@ -20,6 +37,7 @@ namespace TiK_KR_Drozdov
             Dictionary<string, double> symbolProbabilities = inputString
                 .GroupBy(c => c.ToString().ToLower())
                 .ToDictionary(g => g.Key, g => (double)g.Count() / inputString.Length);
+
 
             Queue<Node> inputNodes = new Queue<Node>();
             foreach (KeyValuePair<string, double> pair in symbolProbabilities)
@@ -37,6 +55,9 @@ namespace TiK_KR_Drozdov
             _head = inputNodes.Dequeue();
 
             CodesDictionary = GetCodesDictionary(); // Построение словаря символов и кодов
+
+            CalculateEntropy(symbolProbabilities);
+            CalculateAverageLength(symbolProbabilities);
         }
 
         /// <summary>
@@ -130,6 +151,29 @@ namespace TiK_KR_Drozdov
             }
 
             return decodeString;
+        }
+
+
+        private void CalculateEntropy(Dictionary<string, double> symbolProbabilities)
+        {
+            _entropy = 0;
+            foreach (KeyValuePair<string, double> pair in symbolProbabilities)
+            {
+                _entropy += pair.Value * Math.Log(pair.Value, 2);
+            }
+            _entropy = -_entropy;
+        }
+
+        public void CalculateAverageLength(Dictionary<string, double> symbolProbabilities)
+        {
+            _averageLength = 0;
+            foreach (KeyValuePair<string, double> pair in symbolProbabilities)
+            {
+                string currentStr = pair.Key;
+                CodesDictionary.TryGetValue(currentStr, out string code);
+                symbolProbabilities.TryGetValue(currentStr, out double probability);
+                _averageLength += code.Length * probability;
+            }
         }
     }
 
